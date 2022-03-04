@@ -1,5 +1,5 @@
 var express = require('express');
-var express_graphql = require('express-graphql').graphqlHTTP ;
+var express_graphql = require('express-graphql').graphqlHTTP;
 var { buildSchema } = require('graphql');
 const cors = require('cors');
 
@@ -47,13 +47,13 @@ var coursesData = [
         url: 'https://codingthesmartway.com/courses/understand-javascript/'
     }
 ]
-var getCourse = function(args) { 
+var getCourse = function (args) {
     var id = args.id;
     return coursesData.filter(course => {
         return course.id == id;
     })[0];
 }
-var getCourses = function(args) {
+var getCourses = function (args) {
     if (args.topic) {
         var topic = args.topic;
         return coursesData.filter(course => course.topic === topic);
@@ -61,23 +61,25 @@ var getCourses = function(args) {
         return coursesData;
     }
 }
-let updateCourse =(args)=>{
-    let course=coursesData.filter(course=>course.id==args.id);
-    course.title=args.title;
+let updateCourse = (args) => {
+    let course = coursesData.filter(course => course.id == args.id);
+    course.title = args.title;
     return course;
 }
 var root = {
     course: getCourse,
     courses: getCourses,
-    updateCourse:updateCourse
+    updateCourse: updateCourse
 };
 // Create an express server and a GraphQL endpoint
 var app = express();
+
+app.use(cors());
 app.use('/graphql', express_graphql({
     schema: schema,
     rootValue: root,
     graphiql: true
 }));
+
 app.listen(4000, () => console.log('Express GraphQL Server Now Running On localhost:4000/graphql'));
-app.use(cors());
 
